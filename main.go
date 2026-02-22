@@ -7,7 +7,7 @@ import (
 	"net"
 	"strings"
 
-	_ "modernc.org/sqlite"
+	_"github.com/mattn/go-sqlite3"
 )
 
 func handleClient(conn net.Conn, db *sql.DB) {
