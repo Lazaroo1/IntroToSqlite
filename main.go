@@ -104,7 +104,7 @@ func handleClient(conn net.Conn, db *sql.DB) {
 
 func main() {
 	// Abrir DB
-	db, err := sql.Open("sqlite", "series.db")
+	db, err := sql.Open("sqlite3", "series.db")
 	if err != nil {
 		panic(err)
 	}
