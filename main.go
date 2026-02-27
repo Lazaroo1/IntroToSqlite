@@ -51,6 +51,9 @@ func handleClient(conn net.Conn, db *sql.DB) {
 					th, td { border: 1px solid white; padding: 10px; text-align: center; }
 					th { background: #333; }
 					h1 { text-align: center; }
+					.progress div {
+    				transition: width 0.5s;
+}
 				</style>
 			</head>
 			<body>
@@ -61,6 +64,7 @@ func handleClient(conn net.Conn, db *sql.DB) {
 				<th>Name</th>
 				<th>Current</th>
 				<th>Total</th>
+				<th>Progress</th>
 			</tr>
 			`
 
@@ -72,18 +76,37 @@ func handleClient(conn net.Conn, db *sql.DB) {
 
 				rows.Scan(&id, &name, &current, &total)
 
+
 				html += fmt.Sprintf(`
 				<tr>
 					<td>%d</td>
 					<td>%s</td>
 					<td>%d</td>
 					<td>%d</td>
+					<td class="progress" data-current="%d" data-total="%d"></td>
 				</tr>
-				`, id, name, current, total)
+				`, id, name, current, total, current, total)
+
 			}
 
 			html += `
 			</table>
+
+			<script>
+			document.querySelectorAll(".progress").forEach(td => {
+				let current = parseInt(td.dataset.current);
+				let total = parseInt(td.dataset.total);
+
+				let percent = Math.floor((current / total) * 100);
+
+				td.innerHTML =
+					"<div style='background:#333; border-radius:10px; overflow:hidden;'>" +
+						"<div style='width:" + percent + "%; background:#4caf50; padding:5px; text-align:center; color:white;'>" +
+							percent + "%" +
+						"</div>" +
+					"</div>";
+			});
+			</script>
 			</body>
 			</html>
 			`
